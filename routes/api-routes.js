@@ -1,23 +1,7 @@
 const db = require("../models");
 
 module.exports = function (app) {
-    
-    app.get ("/api/workouts", (req, res) => {
-        
-        db.Workout.find({}).then(dbWorkout => {
-            dbWorkout.forEach(workout => {
-                var total = 0;
-                workout.exercises.forEach(e => {
-                    total += e.duraction;
-                });
-                workout.totalDuration = total;
-            });
 
-            res.json(dbWorkout);
-        }).catch(err => {
-            res.json(err);
-        });
-    });
 
     app.put("/api/workouts/:id", (req, res) => {
         
@@ -35,10 +19,19 @@ module.exports = function (app) {
         
     });
 
-    app.post("/api/workouts", ({ body}, res) => {
-        db.Workout.create(body).then((dbWorkout => {
+    app.get ("/api/workouts", (req, res) => {
+        
+        db.Workout.find({}).then(dbWorkout => {
+            dbWorkout.forEach(workout => {
+                var total = 0;
+                workout.exercises.forEach(e => {
+                    total += e.duraction;
+                });
+                workout.totalDuration = total;
+            });
+
             res.json(dbWorkout);
-        })).catch(err => {
+        }).catch(err => {
             res.json(err);
         });
     });
@@ -53,4 +46,14 @@ module.exports = function (app) {
         });
 
     });
+
+    app.post("/api/workouts", ({ body}, res) => {
+        db.Workout.create(body).then((dbWorkout => {
+            res.json(dbWorkout);
+        })).catch(err => {
+            res.json(err);
+        });
+    });
+
+
 }
