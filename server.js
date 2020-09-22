@@ -7,13 +7,17 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+// use logger
 app.use(logger("dev"));
 
+//use parser
 app.use(express.urlencoded({ extened: true}));
 app.use(express.json());
 
+//use static files
 app.use(express.static("public"));
 
+//mongoose gonnect with info for heroku
 mongoose.connect(
     process.env.MONGODB_URI || 'mongodb://localhost/workout',
     {
@@ -23,18 +27,21 @@ mongoose.connect(
       useFindAndModify: false
     }
   );
-  
+
+  //use api routes
 require("./routes/api-routes.js")(app);
 
+//exercise
 app.get("/exercise", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/exercise.html"));
 });
 
+//index route
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 
-
+//stats
 app.get("/stats", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/stats.html"));
 });
